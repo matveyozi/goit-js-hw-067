@@ -4,6 +4,7 @@ import { galleryItems } from './gallery-items.js';
 const gallery = document.querySelector('.gallery');
 console.log(galleryItems);
 
+// Функція рендеру галереї
 function render(parentSelector, arrayContent) {
   const gallaryItem = arrayContent.map(element => {
     return `
@@ -25,23 +26,24 @@ function render(parentSelector, arrayContent) {
 render(gallery, galleryItems);
 
 
-function openImgOriginal(parentSelector) {
+gallery.addEventListener('click', openImgOriginal);
 
-  for (let item of parentSelector.children) {
-    item.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (e.target.hasAttribute('data-source')) {
-        const instance = basicLightbox.create(`<img src="${e.target.getAttribute('data-source')}" width="800" height="600">`);
-        instance.show();
-      }
-    });
-    item.addEventListener('keydown', (e) => {
-      if (basicLightbox.visible() || e.key === 'Escape') {
-        basicLightbox.visible
-      }
-    });
+// Функція яка відкриває модалку
+function openImgOriginal(e) {
+  e.preventDefault();
+  // Перевірка на натискання
+  if (!e.target.hasAttribute('data-source')) {
+    return;
   }
-
+  // Додав функції при відкритті onShow та закритті onClose
+  const instance = basicLightbox.create(`<img src="${e.target.getAttribute('data-source')}" width="800" height="600">`, {
+    onShow: (instance) => {
+      window.addEventListener('keydown', (event) => { if (event.key === 'Escape') instance.close() });
+      e.target.removeEventListener('click', openImgOriginal);
+    },
+    onClose: (instance) => { e.target.removeEventListener('click', openImgOriginal);  }
+  });
+  instance.show();
 }
-openImgOriginal(gallery);
+
 

@@ -22,6 +22,7 @@ function render(parentSelector, arrayContent) {
 }
 render(gallery, galleryItems);
 
-var lightbox = new SimpleLightbox('.gallery a', {
+// var змінено на const
+const lightbox = new SimpleLightbox('.gallery a', {
   captionDelay: 250
 });
